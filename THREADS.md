@@ -1,6 +1,7 @@
 # THREAD ALLOCATION
 
 - `Without SWAP => spawn thread ~= 100kB Memory`
+- `Don't believe to top, free and other tools in a container`
 
 #### Threads = 0
 
@@ -197,6 +198,19 @@ Total: reserved=1480256KB, committed=58836KB
 ```
 
 ```
+top - 16:05:06 up  4:43,  0 users,  load average: 0.07, 0.06, 0.02
+Tasks:   3 total,   1 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.1 sy,  0.0 ni, 99.9 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   7973.3 total,   3755.3 free,    366.2 used,   3851.8 buff/cache
+MiB Swap:   2560.0 total,   2542.8 free,     17.2 used.   7309.3 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1 root      20   0 3667188  42124  24976 S   0.3   0.5   0:00.46 java
+  118 root      20   0    5544   3480   3064 S   0.0   0.0   0:00.03 bash
+  125 root      20   0   15756   3300   2828 R   0.0   0.0   0:00.00 top
+```
+
+```
 CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT   MEM %               NET I/O             BLOCK I/O           PIDS
 63cc37fb090f        kind_ardinghelli    0.14%               28.84MiB / 64MiB    45.06%              828B / 0B           0B / 0B             112
 ```
@@ -213,6 +227,19 @@ Total: reserved=1587122KB, committed=73298KB
                             (stack: reserved=218956KB, committed=21700KB)
                             (malloc=768KB #1072)
                             (arena=250KB #424)
+```
+
+```
+top - 16:06:14 up  4:44,  0 users,  load average: 0.02, 0.05, 0.01
+Tasks:   3 total,   1 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.2 us,  0.2 sy,  0.0 ni, 99.6 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   7973.3 total,   3743.0 free,    378.0 used,   3852.3 buff/cache
+MiB Swap:   2560.0 total,   2542.8 free,     17.2 used.   7297.4 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1 root      20   0 3769988  43384  25180 S   0.0   0.5   0:00.35 java
+  219 root      20   0    5544   3408   2988 S   0.0   0.0   0:00.03 bash
+  227 root      20   0   15756   3432   2960 R   0.0   0.0   0:00.00 top
 ```
 
 ```
@@ -235,6 +262,19 @@ Total: reserved=1694000KB, committed=87800KB
 ```
 
 ```
+top - 16:07:20 up  4:45,  0 users,  load average: 0.00, 0.03, 0.01
+Tasks:   3 total,   1 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :   7973.3 total,   3728.7 free,    391.8 used,   3852.7 buff/cache
+MiB Swap:   2560.0 total,   2542.8 free,     17.2 used.   7283.5 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+    1 root      20   0 3872788  44796  24944 S   0.3   0.5   0:00.46 java
+  319 root      20   0    5544   3456   3036 S   0.0   0.0   0:00.03 bash
+  328 root      20   0   15756   3324   2852 R   0.0   0.0   0:00.00 top
+```
+
+```
 CONTAINER ID        NAME                 CPU %               MEM USAGE / LIMIT   MEM %               NET I/O             BLOCK I/O           PIDS
 5ff17bd5f9f1        determined_poitras   0.20%               53.73MiB / 64MiB    83.96%              758B / 0B           0B / 0B             312
 ```
@@ -251,3 +291,26 @@ CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT   
 - `Threads 400`
 
 => Failed during a startup, no logs.
+
+#### Enabled JVM Logging
+
+```
+docker run -it --memory 64m --memory-swap 64m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java "-Xlog:thread*" \
+-XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.ThreadAllocation 1000
+```
+
+```
+[0.005s][info][os,thread] Thread attached (tid: 9, pthread id: 140568252507904).
+[0.018s][info][os,thread] Thread started (pthread id: 140567779149568, attributes: stacksize: 1024k, guardsize: 4k, detached).
+[0.018s][info][os,thread] Thread is alive (tid: 10, pthread id: 140567779149568).
+[0.020s][info][os,thread] Thread started (pthread id: 140567778092800, attributes: stacksize: 1024k, guardsize: 0k, detached).
+[0.020s][info][os,thread] Thread is alive (tid: 11, pthread id: 140567778092800).
+[0.021s][info][os,thread] Thread started (pthread id: 140567777040128, attributes: stacksize: 1024k, guardsize: 0k, detached).
+...
+[0.415s][info][os,thread] Thread started (pthread id: 140001483339520, attributes: stacksize: 1024k, guardsize: 0k, detached).
+[0.415s][info][os,thread] Thread is alive (tid: 425, pthread id: 140001483339520).
+```
+
+=> Exit without any error
