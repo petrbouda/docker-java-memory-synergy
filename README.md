@@ -1,10 +1,39 @@
 # JVM DOCKER SYNERGY
 
-`NEVER TRUST PROGRAMS SUCH AS: top, free`
+- `Reserved`
 
-`ALWAYS USE: docker stats`
+This area of the address space has been reserved for future use by the process but can't be 
+accessed until it has been committed. A lot of the Java heap starts off as reserved.
 
-`DISABLE SWAP IN DOCKER CONTAINER: --memory must have same value as --memory-swap`
+- `Committed`
+
+Memory that can be accessed by the program and is fully backed, which means that page 
+frames have been allocated for it in the paging file. Committed pages are loaded into 
+main memory only when the process first references them. Hence the name on-demand paging.
+
+```
+Programs that want to allocate a large and contiguous area of memory but don't need it all 
+immediately often use a combination of reserved and committed memory. The JVM allocates the 
+Java heap in this way. The -mx parameter to the JVM tells it what the maximum size of the heap 
+should be, but the JVM often doesn't allocate all that memory at the start. It reserves the 
+amount specified by -mx, marking the full range of addresses as available to be committed. 
+It then commits just a part of the memory, and it is only for this part that the memory manager 
+needs to allocate pages in real memory and in the paging file to back them up. Later, when the 
+amount of live data grows and the heap needs to be expanded, the JVM can commit a little more,
+adjacent to the currently committed area. 
+
+JVM needs memory in order to execute your program: the Java heap, the C heap for the JVM itself,
+stacks for program threads, memory for holding bytecode and JITted methods, memory that native 
+methods allocate, and more
+```
+
+![top memory_footprint](img/memoryDiagram.gif)
+
+- `NEVER TRUST PROGRAMS SUCH AS: top, free`
+
+- `ALWAYS USE: docker stats`
+
+- `DISABLE SWAP IN DOCKER CONTAINER: --memory must have same value as --memory-swap`
 
 - Examples based on Java 11
 

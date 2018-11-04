@@ -1,13 +1,13 @@
 # MAX RAM OPTION
 
+`Default Xmx = MaxRAM / MaxRAMFraction`
+
 ```
 java -XX:+PrintFlagsFinal -version | grep MaxRAM
  uint64_t MaxRAM                                   = 137438953472                           {pd product} {default}
     uintx MaxRAMFraction                           = 4                                         {product} {default}
    double MaxRAMPercentage                         = 25.000000                                 {product} {default}
 ```
-
-
 
 ```
 docker run -it --memory 512m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -XX:MaxRAM=512m \
