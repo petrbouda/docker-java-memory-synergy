@@ -1,4 +1,10 @@
-# docker-java-memory-synergy
+# JVM DOCKER SYNERGY
+
+`NEVER TRUST PROGRAMS SUCH AS: top, free`
+
+`ALWAYS USE: docker stats`
+
+`DISABLE SWAP IN DOCKER CONTAINER: --memory must have same value as --memory-swap`
 
 - Examples based on Java 11
 

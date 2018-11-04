@@ -1,5 +1,76 @@
 # JVM DOCKER MEMORY DEFAULTS
 
+- JVM 11 with no special JVM flags
+
+```
+docker run -it --memory 512m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java \
+-XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+
+HEAP MEMORY
+------------------------
+INIT: 8 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: 123 MB
+
+NON-HEAP MEMORY
+------------------------
+INIT: 7 MB
+USED: 2 MB
+COMMITTED: 12 MB
+MAX: -1 MB
+
+Native Memory Tracking:
+
+Total: reserved=1467921KB, committed=41061KB
+-                 Java Heap (reserved=131072KB, committed=8192KB)
+                            (mmap: reserved=131072KB, committed=8192KB)
+
+-                     Class (reserved=1056951KB, committed=5047KB)
+```
+
+- No JVM and Docker flags
+
+=> My limit for Docker-Machine is 8GB
+=> Container takes the limit almost everything and use it also for calculation Heap size
+
+```
+docker run -it -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java \
+-XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+
+HEAP MEMORY
+------------------------
+INIT: 126 MB
+USED: 1 MB
+COMMITTED: 126 MB
+MAX: 1994 MB
+
+NON-HEAP MEMORY
+------------------------
+INIT: 7 MB
+USED: 2 MB
+COMMITTED: 12 MB
+MAX: -1 MB
+
+Native Memory Tracking:
+
+Total: reserved=3501136KB, committed=208652KB
+-                 Java Heap (reserved=2041856KB, committed=129024KB)
+                            (mmap: reserved=2041856KB, committed=129024KB)
+
+-                     Class (reserved=1056948KB, committed=5044KB)
+```
+
+```
+CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+ae26a5d283f2        objective_pasteur   0.16%               17.02MiB / 7.786GiB   0.21%               688B / 0B           0B / 0B             17
+
+```
+
 - JVM 9 or JVM 10 with `-XX:-UseContainerSupport`
 
 ```
@@ -98,4 +169,46 @@ Operating System Metrics:
 openjdk version "11" 2018-09-25
 OpenJDK Runtime Environment (build 11+28-Debian-1)
 OpenJDK 64-Bit Server VM (build 11+28-Debian-1, mixed mode, sharing)
+```
+
+#### Can I setup more -Xmx than Container Memory?
+
+```
+docker run -it --memory 512m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -Xmx512m \
+-XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+
+HEAP MEMORY
+------------------------
+INIT: 8 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: 494 MB
+
+Native Memory Tracking:
+
+Total: reserved=1862418KB, committed=41062KB
+-                 Java Heap (reserved=524288KB, committed=8192KB)
+                            (mmap: reserved=524288KB, committed=8192KB)
+```
+
+```
+docker run -it --memory 512m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -Xmx1g \
+-XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+
+HEAP MEMORY
+------------------------
+INIT: 8 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: 989 MB
+
+Native Memory Tracking:
+
+Total: reserved=2391456KB, committed=44112KB
+-                 Java Heap (reserved=1048576KB, committed=8192KB)
+                            (mmap: reserved=1048576KB, committed=8192KB)
 ```
