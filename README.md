@@ -341,11 +341,11 @@ Total: reserved=1355555KB, committed=43759KB
 ## Docker Stats, Disabling JIT Compiler
 
 ```
-docker run -it --memory 64m --memory-swap 64m --name without-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java \
+docker run -it --memory 64m --memory-swap 64m --name with-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java \
 --add-exports=java.management/sun.management=docker.limits \
 --module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
 
-docker run -it --memory 64m --memory-swap 64m --name with-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -Djava.compiler=NONE  \
+docker run -it --memory 64m --memory-swap 64m --name without-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -Djava.compiler=NONE  \
 --add-exports=java.management/sun.management=docker.limits \
 --module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
 ```
