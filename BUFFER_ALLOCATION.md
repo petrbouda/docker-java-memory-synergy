@@ -1,4 +1,4 @@
-# BUFFER ALLOCATION
+# DIRECT BUFFER ALLOCATION
 
 - Can I see in Native Memory Tracking an allocation of DirectBuffers?
 
