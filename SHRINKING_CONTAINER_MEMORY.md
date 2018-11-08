@@ -86,4 +86,83 @@ java -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintN
 
 `DEAD :)`
 
+### Disabled JIT
 
+```
+docker run -it --memory 64m --memory-swap 64m --name with-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+
+docker run -it --memory 64m --memory-swap 64m --name without-jit -v $(pwd)/target/classes:/src -w /src openjdk:11-jre java -Djava.compiler=NONE  \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+```
+
+![docker-stats](img/docker-stats.png)
+
+![docker-stats](img/g1gc-no-jit.png)
+
+### Disabled JIT + Epsilon GC 
+
+```
+docker run -it --memory 64m --memory-swap 64m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre \
+java -XX:+UnlockExperimentalVMOptions -XX:+UseEpsilonGC -Djava.compiler=NONE \
+--add-exports=java.management/sun.management=docker.limits \
+--module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+```
+
+![docker-stats](img/epsilon-no-jit.png)
+
+- Enabled Epsilon without JIT
+
+```
+HEAP MEMORY
+------------------------
+INIT: 6 MB
+USED: 1 MB
+COMMITTED: 6 MB
+MAX: 32 MB
+
+NON-HEAP MEMORY
+------------------------
+INIT: 2 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: -1 MB
+```
+
+- G1GC without JIT
+
+```
+HEAP MEMORY
+------------------------
+INIT: 8 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: 30 MB
+
+NON-HEAP MEMORY
+------------------------
+INIT: 2 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: -1 MB
+```
+
+- G1GC with JIT
+
+```
+HEAP MEMORY
+------------------------
+INIT: 8 MB
+USED: 1 MB
+COMMITTED: 7 MB
+MAX: 30 MB
+
+NON-HEAP MEMORY
+------------------------
+INIT: 7 MB
+USED: 2 MB
+COMMITTED: 12 MB
+MAX: -1 MB
+```
