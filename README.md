@@ -1,5 +1,23 @@
 # JVM DOCKER SYNERGY
 
+### Docker Containers Monitoring
+
+https://github.com/google/cadvisor
+
+```
+sudo docker run -it \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:ro \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --volume=/dev/disk/:/dev/disk:ro \
+  --publish=8080:8080 \
+  --name=cadvisor \
+  google/cadvisor:latest
+```
+
+### JVM Memory Terms
+
 - `Reserved`
 
 This area of the address space has been reserved for future use by the process but can't be 
@@ -281,42 +299,6 @@ MAX: -1 MB
 ```
 
 - `40MB (RSS in Container) - 1M (HEAP) - 2MB (NON-HEAP) = ~37MB JVM Overhead? (C code, libraries, JVM Structures)`
-
-## Crashing Docker Container by reducing Container's Memory
-
-- the rule Heap is 1/4 of provided memory is broken when we go under ~512MB
-    - docker run -it -m 512m -> MaxHeap 123MB
-    - 400m -> 121MB
-    - 256m -> 121MB
-    - 244m -> 117MB
-    - 200m -> 96MB
-    - 100m -> 48MB
-    - 64m -> 30MB
-    - 32m -> 15MB
-    - 16m -> 7MB (InitHeap is 8MB)
-    - 8m -> 7MB
-    
-```
-HEAP MEMORY
-------------------------
-INIT: 4 MB
-USED: 1 MB
-COMMITTED: 3 MB
-MAX: 7 MB
-
-NON-HEAP MEMORY
-------------------------
-INIT: 7 MB
-USED: 2 MB
-COMMITTED: 12 MB
-MAX: -1 MB
-```
-
-- 64m, still bigger than RES (39MB)
-
-```
-docker run -it -m 64m ...
-```
 
 ![ps-u memory_footprint](img/psu-container-64m.png)
 
