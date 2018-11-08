@@ -1,6 +1,6 @@
-# SHRINKING CONTAINER MEMORY
+# SHRINKING CONTAINER'S MEMORY
 
-### Without Disabled SWAP
+### With Enabled SWAPPING
 
 ```
 docker run -it -memory 400m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre \
@@ -37,7 +37,7 @@ COMMITTED: 12 MB
 MAX: -1 MB
 ```
 
-### With Disabled SWAP
+### With Disabled SWAPPING
 
 - 400m Docker Container
 
@@ -61,10 +61,7 @@ Total: reserved=1465812KB, committed=41004KB
 -  20m Docker Container
 
 ```
-docker run -it --memory 20m --memory-swap 20m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre \
-java -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
---add-exports=java.management/sun.management=docker.limits \
---module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+docker run -it --memory 20m --memory-swap 20m
 ```
 
 ![top memory_footprint](img/shrinking-20m.png)
@@ -78,10 +75,7 @@ Total: reserved=1346641KB, committed=41005KB
 -  14m Docker Container
 
 ```
-docker run -it --memory 14m --memory-swap 14m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre \
-java -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintNMTStatistics \
---add-exports=java.management/sun.management=docker.limits \
---module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
+docker run -it --memory 14m --memory-swap 14m 
 ```
 
 `DEAD :)`
