@@ -67,13 +67,15 @@ java -XX:+UnlockDiagnosticVMOptions -XX:NativeMemoryTracking=summary -XX:+PrintN
 --module-path . --module docker.limits/pbouda.sandbox.docker.MemoryFootprint
 ```
 
+![top memory_footprint](img/shrinking-20m.png)
+
 ```
 Total: reserved=1346641KB, committed=41005KB
 -                 Java Heap (reserved=10240KB, committed=8192KB)
                             (mmap: reserved=10240KB, committed=8192KB)
 ```
 
-![top memory_footprint](img/shrinking-20m.png)
+-  14m Docker Container
 
 ```
 docker run -it --memory 14m --memory-swap 14m -v $(pwd)/target/classes:/src -w /src openjdk:11-jre \
