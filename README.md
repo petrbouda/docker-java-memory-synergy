@@ -310,7 +310,7 @@ docker run -it -m 32m ...
 
 ## Crashing Docker Container by disabling SWAP memory
 
-- SWAP is disable when `--memory-swap` is set to the same value
+- SWAP is disabled when `--memory-swap` is set to the same value
 
 ```
 docker run -it --memory 32m --memory-swap 32m ..
