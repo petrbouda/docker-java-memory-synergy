@@ -9,6 +9,11 @@ import static java.lang.System.out;
 
 public class Memory {
 
+    public static void printHeapSummary() {
+        MemoryMXBean memoryMXBean = ManagementFactoryHelper.getMemoryMXBean();
+        printMemoryUsage(memoryMXBean.getHeapMemoryUsage(), "HEAP MEMORY");
+    }
+
     public static void printSummary() {
         MemoryMXBean memoryMXBean = ManagementFactoryHelper.getMemoryMXBean();
         printMemoryUsage(memoryMXBean.getHeapMemoryUsage(), "HEAP MEMORY");
