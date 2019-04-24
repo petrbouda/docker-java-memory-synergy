@@ -1,5 +1,10 @@
 # JVM DOCKER SYNERGY
 
+### JDK 11 CGroups Support
+
+`jdk.internal.platform.Metrics`
+`jdk.internal.platform.cgroupv1.Metrics`
+
 ### Docker Containers Monitoring
 
 https://github.com/google/cadvisor
