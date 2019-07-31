@@ -1,7 +1,6 @@
 package pbouda.sandbox.docker.metrics;
 
-import sun.management.ManagementFactoryHelper;
-
+import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 
@@ -10,21 +9,21 @@ import static java.lang.System.out;
 public class Memory {
 
     public static void printHeapSummary() {
-        MemoryMXBean memoryMXBean = ManagementFactoryHelper.getMemoryMXBean();
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
         printMemoryUsage(memoryMXBean.getHeapMemoryUsage(), "HEAP MEMORY");
     }
 
     public static void printSummary() {
-        MemoryMXBean memoryMXBean = ManagementFactoryHelper.getMemoryMXBean();
+        MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
         printMemoryUsage(memoryMXBean.getHeapMemoryUsage(), "HEAP MEMORY");
         printMemoryUsage(memoryMXBean.getNonHeapMemoryUsage(), "NON-HEAP MEMORY");
     }
 
     public static void printDetail() {
-        ManagementFactoryHelper.getMemoryPoolMXBeans()
+        ManagementFactory.getMemoryPoolMXBeans()
                 .forEach(memoryPool -> printMemoryUsage(memoryPool.getUsage(), memoryPool.getName()));
 
-        ManagementFactoryHelper.getRuntimeMXBean();
+        ManagementFactory.getRuntimeMXBean();
     }
 
     private static void printMemoryUsage(MemoryUsage nonHeapMemory, String memoryName) {

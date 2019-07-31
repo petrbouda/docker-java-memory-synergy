@@ -1,16 +1,14 @@
 package pbouda.sandbox.docker.metrics;
 
-import sun.management.ManagementFactoryHelper;
-import sun.management.VMManagement;
+import java.lang.management.CompilationMXBean;
+import java.lang.management.ManagementFactory;
 
 public class Compilation {
 
     public void print() {
-        VMManagement vm = ManagementFactoryHelper.getVMManagement();
-        vm.getCompilerName();
-        vm.getTotalCompileTime();
-        vm.getSafepointCount();
-        vm.getTotalSafepointTime();
-        vm.isCompilationTimeMonitoringSupported();
+        CompilationMXBean compilation = ManagementFactory.getCompilationMXBean();
+        compilation.getName();
+        compilation.getTotalCompilationTime();
+        compilation.isCompilationTimeMonitoringSupported();
     }
 }

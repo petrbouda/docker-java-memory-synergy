@@ -1,7 +1,6 @@
 package pbouda.sandbox.docker.metrics;
 
-import sun.management.ManagementFactoryHelper;
-
+import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
 
@@ -10,7 +9,8 @@ import static java.lang.System.out;
 public class Threading {
 
     public static void print() {
-        ThreadMXBean threads = ManagementFactoryHelper.getThreadMXBean();
+
+        ThreadMXBean threads = ManagementFactory.getThreadMXBean();
         out.println("######################################");
         out.println("THREADS");
 
